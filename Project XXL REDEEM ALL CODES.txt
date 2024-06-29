@@ -1,0 +1,31 @@
+local codeRemote = game:GetService("ReplicatedStorage"):WaitForChild("RemoteEvents"):WaitForChild("CodeRemote")
+
+local function redeemCode(code)
+   local args = {
+       [1] = code
+   }
+   codeRemote:FireServer(unpack(args))
+end
+
+local function redeemAllCodes(player)
+   local codesFolder = player and player:FindFirstChild("Codes")
+   if not codesFolder then
+       print("Codes folder not found.")
+       return
+   end
+
+   for _, codeValue in ipairs(codesFolder:GetChildren()) do
+       if codeValue:IsA("BoolValue") then
+           local codeName = codeValue.Name
+           redeemCode(codeName)
+           wait(0.5) 
+       end
+   end
+end
+
+local localPlayer = game:GetService("Players").LocalPlayer
+if localPlayer then
+   redeemAllCodes(localPlayer)
+else
+   print("Local player not found.")
+end
